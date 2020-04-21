@@ -1,3 +1,5 @@
+import time 
+
 # Returns number of words in string 
 def countWords(string): 
     state = OUT 
@@ -76,6 +78,7 @@ def countCharacters(string):
 
 
 # Driver Code 
+start = time.perf_counter()
 fileObject = open("piney.txt", "r")
 data = fileObject.read()
 
@@ -84,3 +87,7 @@ IN = 1
 print("No. of words : " + str(countWords(data))) 
 print("No. of sentences : " + str(countSentences(data))) 
 print("No. of characters : " + str(countCharacters(data))) 
+
+finish = time.perf_counter()
+
+print(f'Finished in {round(finish-start,10)} seconds(s)')

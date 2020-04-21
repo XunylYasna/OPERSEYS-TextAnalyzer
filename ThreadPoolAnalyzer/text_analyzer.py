@@ -1,11 +1,11 @@
 import time
 
-# importing the threading module 
-import threading 
+# importing the thread pool module 
+import concurrent.futures
 
 # Returns number of words in string 
 def countWords(string): 
-    print('Starting count words thread...')
+    print('Starting count words thread')
     state = OUT 
     wc = 0
   
@@ -26,15 +26,14 @@ def countWords(string):
             wc += 1
   
     # Return the number of words 
-    print("No. of words : " + str(wc)) 
-    return
+    return wc
 
 
 
 
 # Returns number of sentences in string
 def countSentences(string): 
-    print('Starting count sentences thread...')
+    print('Starting count sentence thread')
     state = OUT
     sc = 0
   
@@ -58,13 +57,12 @@ def countSentences(string):
             sc += 1
   
     # Return the number of sentences 
-    print("No. of sentences : " + str(sc)) 
-    return 
+    return sc
 
 
 # Returns number of characters in string(excluding spaces)
 def countCharacters(string): 
-    print('Starting count characters thread...')
+    print('Starting count characters thread')
     cc = 0
     sc = 0
   
@@ -82,8 +80,8 @@ def countCharacters(string):
             cc += 1
   
     # Return the number of character
-    print("No. of characters : " + str(cc))
-    return
+    
+    return cc
 
 
  
@@ -95,24 +93,15 @@ data = fileObject.read()
 OUT = 0
 IN = 1
 
-# creating threads
-t1 = threading.Thread(target=countWords, args=(data,)) 
-t2 = threading.Thread(target=countSentences, args=(data,))
-t3 = threading.Thread(target=countCharacters, args=(data,))
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    wordcount = executor.submit(countWords, data)
+    sentencecount = executor.submit(countSentences, data)
+    charactercount = executor.submit(countCharacters, data)
 
-# starting thread 1 
-t1.start() 
-# starting thread 2 
-t2.start() 
-# starting thread 3
-t3.start() 
+print("No. of words : " + str(wordcount.result())) 
+print("No. of sentences : " + str(sentencecount.result())) 
+print("No. of characters : " + str(charactercount.result())) 
 
-# wait until thread 1 is completely executed 
-t1.join() 
-# wait until thread 2 is completely executed 
-t2.join() 
-# wait until thread 3 is completely executed 
-t3.join() 
 finish = time.perf_counter()
 
 # all threads completely executed 
